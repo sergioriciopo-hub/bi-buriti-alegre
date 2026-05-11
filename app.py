@@ -395,6 +395,27 @@ def load():
     prod_agua  = rd("producao_agua")
     qual_agua  = rd("qualidade_agua")
 
+    # ── Leituras: remove registros com volume claramente errôneo ─────────────────
+    # Critério: qt_volume_lido > nr_consumo_maximo_esperado × 10
+    # Garante que leituras corrigidas posteriormente não distorçam os totais.
+    # Também remove registros com fl_erro_leitura = True (flag do sistema).
+    if not lei.empty:
+        if "fl_erro_leitura" in lei.columns:
+            lei = lei[lei["fl_erro_leitura"] != True]
+        if "qt_volume_lido" in lei.columns and "nr_consumo_maximo_esperado" in lei.columns:
+            mascara_valida = (
+                lei["nr_consumo_maximo_esperado"].isna() |
+                (lei["nr_consumo_maximo_esperado"] <= 0) |
+                (lei["qt_volume_lido"] <= lei["nr_consumo_maximo_esperado"] * 10)
+            )
+            removidos = (~mascara_valida).sum()
+            if removidos > 0:
+                import logging
+                logging.getLogger(__name__).warning(
+                    f"Leituras: {removidos} registro(s) removido(s) por volume > 10× máximo esperado."
+                )
+            lei = lei[mascara_valida]
+
     # normaliza data_pagamento em arr_d para datetime
     if not arr_d.empty and "data_pagamento" in arr_d.columns:
         arr_d["data_pagamento"] = pd.to_datetime(arr_d["data_pagamento"])
