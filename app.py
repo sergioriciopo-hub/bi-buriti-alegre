@@ -33,13 +33,18 @@ DATA_DIR = Path(__file__).parent / "data"
 
 # ── Paleta ────────────────────────────────────────────────────────────────────
 COR = dict(
-    azul="#2E7D32", azul_c="#66BB6A", azul_esc="#1B5E20",
-    verde="#2E7D32", vermelho="#E74C3C", amarelo="#F39C12",
-    cinza="#7F8C8D", branco="#FFFFFF",
-    agua="#2E7D32", esgoto="#8B5CF6", servico="#F39C12", lixo="#66BB6A",
+    azul="#2E7D32",    # verde escuro — faturamento / primário
+    azul_c="#66BB6A",  # verde médio
+    azul_esc="#1B5E20",# verde muito escuro
+    verde="#00897B",   # teal — arrecadação / contraponto ao verde
+    vermelho="#E53935",# vermelho
+    amarelo="#F9A825", # âmbar
+    cinza="#607D8B",   # azul-cinza neutro
+    branco="#FFFFFF",
+    agua="#2E7D32",    esgoto="#7C3AED", servico="#F59E0B", lixo="#66BB6A",
 )
 
-SEQ_AZUL = ["#C8E6C9", "#A5D6A7", "#66BB6A", "#2E7D32", "#1B5E20"]
+SEQ_AZUL = ["#C8E6C9", "#80CBC4", "#4DB6AC", "#2E7D32", "#00695C"]
 
 # ── CSS ───────────────────────────────────────────────────────────────────────
 st.markdown("""
@@ -915,19 +920,19 @@ def line_mensal(df, col_data, col_val, title, cor=None):
 
 # ── Header executivo por página ───────────────────────────────────────────────
 _PG_CORES = {
-    "Executivo":                         ("#3E5F7F", "#5B8FB8"),
-    "Faturamento e Medição":             ("#3E5F7F", "#5B8FB8"),
-    "Arrecadação (Série Histórica)":     ("#3E5F7F", "#5B8FB8"),
-    "Boletim de Arrecadação Diária":     ("#3E5F7F", "#5B8FB8"),
-    "Inadimplência":                     ("#3E5F7F", "#5B8FB8"),
-    "Serviços Operacionais":             ("#3E5F7F", "#5B8FB8"),
-    "Cobrança e Recuperação de Receita": ("#3E5F7F", "#5B8FB8"),
-    "Leituras e Hidrômetros":            ("#3E5F7F", "#5B8FB8"),
-    "Frota Combustível":                 ("#3E5F7F", "#5B8FB8"),
-    "Energia Elétrica":                  ("#3E5F7F", "#5B8FB8"),
-    "Setores Operacionais":              ("#3E5F7F", "#5B8FB8"),
-    "Perdas":                            ("#7B241C", "#C0392B"),
-    "Tratamento":                        ("#0E6655", "#1A9278"),
+    "Executivo":                         ("#1B5E20", "#2E7D32"),  # verde escuro
+    "Faturamento e Medição":             ("#00695C", "#00897B"),  # teal escuro
+    "Arrecadação (Série Histórica)":     ("#1565C0", "#1976D2"),  # azul
+    "Boletim de Arrecadação Diária":     ("#006064", "#00838F"),  # ciano escuro
+    "Inadimplência":                     ("#7B241C", "#C0392B"),  # vermelho
+    "Serviços Operacionais":             ("#BF360C", "#E64A19"),  # laranja escuro
+    "Cobrança e Recuperação de Receita": ("#4527A0", "#5E35B1"),  # roxo
+    "Leituras e Hidrômetros":            ("#1565C0", "#1976D2"),  # azul
+    "Frota Combustível":                 ("#37474F", "#546E7A"),  # azul-cinza
+    "Energia Elétrica":                  ("#E65100", "#F57C00"),  # âmbar escuro
+    "Setores Operacionais":              ("#1B5E20", "#388E3C"),  # verde
+    "Perdas":                            ("#7B241C", "#C0392B"),  # vermelho
+    "Tratamento":                        ("#0E6655", "#1A9278"),  # verde-água
 }
 
 def page_header(titulo, periodo_str=""):
@@ -1700,11 +1705,11 @@ def _faturamento_body(D, d0, d1):
         n = len(ag_b)
         import colorsys
         def _grad_azul(i, total):
-            # interpola de #AED6F1 (claro) a #1A5276 (escuro) conforme posição
+            # interpola de #A5D6A7 (verde claro) a #1B5E20 (verde escuro) conforme posição
             t = i / max(total - 1, 1)
-            r = int(174 + t * (26  - 174))
-            g = int(214 + t * (82  - 214))
-            b = int(241 + t * (118 - 241))
+            r = int(165 + t * (27  - 165))
+            g = int(214 + t * (94  - 214))
+            b = int(167 + t * (32  - 167))
             return f"rgb({r},{g},{b})"
         cores_grad = [_grad_azul(i, n) for i in range(n)]
         fig5 = go.Figure(go.Bar(
