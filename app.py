@@ -1148,7 +1148,7 @@ def pg_cockpit(D, d0, d1):
             ),
             hovermode="x unified",
         )
-        st.plotly_chart(fig1, use_container_width=True)
+        st.plotly_chart(fig1, width="stretch")
     else:
         st.info("Sem dados de faturamento/arrecadação no período.")
 
@@ -1189,7 +1189,7 @@ def pg_cockpit(D, d0, d1):
             legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
             hovermode="x unified",
         )
-        st.plotly_chart(fig2, use_container_width=True)
+        st.plotly_chart(fig2, width="stretch")
 
     # ══════════════════════════════════════════════════════════════════════════
     # 3 — Fatura Média por Economia (R$/Economia)
@@ -1257,7 +1257,7 @@ def pg_cockpit(D, d0, d1):
             legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0),
             hovermode="x unified",
         )
-        st.plotly_chart(fig3, use_container_width=True)
+        st.plotly_chart(fig3, width="stretch")
 
     # ══════════════════════════════════════════════════════════════════════════
     # 4 — Volume Faturado por Economia (m³/Economia)
@@ -1304,7 +1304,7 @@ def pg_cockpit(D, d0, d1):
             legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
             hovermode="x unified",
         )
-        st.plotly_chart(fig4, use_container_width=True)
+        st.plotly_chart(fig4, width="stretch")
 
     # ══════════════════════════════════════════════════════════════════════════
     # 5 — Inadimplência por Período de Medição
@@ -1375,7 +1375,7 @@ def pg_cockpit(D, d0, d1):
             plot_bgcolor="rgba(245,248,250,0.8)",
             uniformtext_minsize=4, uniformtext_mode="show",
         )
-        st.plotly_chart(fig5, use_container_width=True)
+        st.plotly_chart(fig5, width="stretch")
 
     # ══════════════════════════════════════════════════════════════════════════
     # 6 — Inadimplência Geral
@@ -1407,7 +1407,7 @@ def pg_cockpit(D, d0, d1):
             yaxis=dict(title=""),
             showlegend=False,
         )
-        st.plotly_chart(fig6, use_container_width=True)
+        st.plotly_chart(fig6, width="stretch")
 
     # ══════════════════════════════════════════════════════════════════════════
     # 7 — Ligações por Situação
@@ -1458,7 +1458,7 @@ def pg_cockpit(D, d0, d1):
             xaxis=dict(title=""), yaxis=dict(title="", tickformat=",.0f"),
             barmode="group",
         )
-        st.plotly_chart(fig7, use_container_width=True)
+        st.plotly_chart(fig7, width="stretch")
     else:
         st.info("Execute o ETL para ver o detalhamento por situação de ligação.")
 
@@ -1615,7 +1615,7 @@ def _faturamento_body(D, d0, d1):
     fig.update_layout(margin=dict(t=35, b=0, l=0, r=20), xaxis_title="", yaxis_title="",
                       uniformtext_minsize=8, uniformtext_mode="hide")
     fig.update_yaxes(tickformat=",.0f")
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     # Pizza composição — somente componentes do líquido
     comp_data = {"Água": vl_agua, "Tarifa Básica": vl_tar_bas,
@@ -1655,12 +1655,12 @@ def _faturamento_body(D, d0, d1):
             ),
             paper_bgcolor="rgba(0,0,0,0)",
         )
-        st.plotly_chart(fig2, use_container_width=True)
+        st.plotly_chart(fig2, width="stretch")
     # Volume m³ mensal
     fig3 = bar_mensal(fat, "dt_ref", "volume_m3",
                       "Volume Faturado m³ (mensal)", COR["azul_c"])
     fig3.update_yaxes(tickformat=",.0f")
-    st.plotly_chart(fig3, use_container_width=True)
+    st.plotly_chart(fig3, width="stretch")
 
     # Por categoria
     if "id_categoria" in fat.columns and not D["d_cat"].empty:
@@ -1694,7 +1694,7 @@ def _faturamento_body(D, d0, d1):
             ),
             paper_bgcolor="rgba(0,0,0,0)",
         )
-        st.plotly_chart(fig4, use_container_width=True)
+        st.plotly_chart(fig4, width="stretch")
 
     # Por bairro (top 15)
     if "nm_bairro_dim" in fat.columns:
@@ -1728,7 +1728,7 @@ def _faturamento_body(D, d0, d1):
             yaxis=dict(title=""),
             uniformtext_minsize=9, uniformtext_mode="hide",
         )
-        st.plotly_chart(fig5, use_container_width=True)
+        st.plotly_chart(fig5, width="stretch")
 
     # Aviso de cobertura
     if fat_max is not None:
@@ -1827,7 +1827,7 @@ def pg_arrecadacao(D, d0, d1):
                       annotation_text=f"Comp. {_comp['label_comp']}", annotation_position="top right")
     fig.update_layout(margin=dict(t=35, b=0, l=0, r=20), xaxis_title="", yaxis_title="")
     fig.update_yaxes(tickformat=",.0f")
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     # Componentes da arrecadação no período
     comp_cols = {
@@ -1849,7 +1849,7 @@ def pg_arrecadacao(D, d0, d1):
                           "Lixo": COR["lixo"], "Serviços": COR["servico"]
                       })
         fig2.update_layout(margin=dict(t=35, b=0, l=0, r=20))
-        st.plotly_chart(fig2, use_container_width=True)
+        st.plotly_chart(fig2, width="stretch")
     # Índice de eficiência mensal (onde fat disponível)
     fat_hist2 = D["fat"].copy()
     if not fat_hist2.empty:
@@ -1870,7 +1870,7 @@ def pg_arrecadacao(D, d0, d1):
                        annotation_text="Meta 95%")
         fig3.update_layout(margin=dict(t=35, b=0, l=0, r=20), xaxis_title="", yaxis_title="")
         fig3.update_yaxes(tickformat=".0%")
-        st.plotly_chart(fig3, use_container_width=True)
+        st.plotly_chart(fig3, width="stretch")
     else:
         st.info("Índice de eficiência requer dados de faturamento (disponível até Abr/2024).")
 
@@ -1886,7 +1886,7 @@ def pg_arrecadacao(D, d0, d1):
                       title="Canal de Pagamento (dados disponíveis)",
                       color_discrete_sequence=px.colors.qualitative.Set3)
         fig4.update_layout(margin=dict(t=35, b=0, l=0, r=20))
-        st.plotly_chart(fig4, use_container_width=True)
+        st.plotly_chart(fig4, width="stretch")
     else:
         # usa tipo_documento da arr quando parr está vazio no período
         if "tipo_documento" in arr.columns:
@@ -1898,7 +1898,7 @@ def pg_arrecadacao(D, d0, d1):
                            color_discrete_sequence=[COR["azul_c"]])
             fig4b.update_layout(margin=dict(t=35, b=0, l=0, r=20), xaxis_title="", yaxis_title="")
             fig4b.update_xaxes(tickformat=",.0f")
-            st.plotly_chart(fig4b, use_container_width=True)
+            st.plotly_chart(fig4b, width="stretch")
 
 
 def pg_arrecadacao_diaria(D, d0, d1):
@@ -2014,7 +2014,7 @@ def pg_arrecadacao_diaria(D, d0, d1):
         hovermode="x unified", barmode="overlay",
     )
     fig.update_yaxes(tickformat=",.0f")
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     # Por forma de arrecadação (agente)
     if not D["d_frm"].empty and "id_forma_arrecadacao" in ad_f.columns:
@@ -2053,7 +2053,7 @@ def pg_arrecadacao_diaria(D, d0, d1):
                 tracegroupgap=10,
             )
         )
-        st.plotly_chart(fig2, use_container_width=True)
+        st.plotly_chart(fig2, width="stretch")
 
     # Tabela detalhada — igual ao relatório do sistema
     st.markdown("#### Tabela Diária de Arrecadação")
@@ -2078,7 +2078,7 @@ def pg_arrecadacao_diaria(D, d0, d1):
         })
         .apply(lambda row: ["font-weight:bold; background:#E8F4FD"]*len(row)
                if row["Data"]=="TOTAL" else [""]*len(row), axis=1),
-        use_container_width=True,
+        width="stretch",
         height=600,
     )
 
@@ -2099,7 +2099,7 @@ def pg_arrecadacao_diaria(D, d0, d1):
             ag_ag = pd.concat([ag_ag, ag_tot])
             st.dataframe(
                 ag_ag.style.format({"Valor": "R$ {:,.2f}"}),
-                use_container_width=True,
+                width="stretch",
             )
 
 
@@ -2120,19 +2120,11 @@ def pg_inadimplencia(D, d0, d1):
     idx_inad = vl_inad / vl_fat if vl_fat else 0
     qtd_fat  = len(inad)
     tkt_med  = vl_inad / qtd_fat if qtd_fat else 0
-    qtd_corte = int(inad["fl_corte_pendente"].sum()) if "fl_corte_pendente" in inad.columns else 0
-    c1, c2 = st.columns(2)
-    kpi(c1, "Total Inadimplência", vl_inad)
-    kpi(c2, "Índice Inadimplência", idx_inad, prefixo="%")
-
-    c3, c4 = st.columns(2)
-    kpi(c3, "Qtd Faturas Vencidas", qtd_fat, prefixo="")
-    kpi(c4, "Ticket Médio", tkt_med)
-
-    c5, c6 = st.columns(2)
-    c5.metric("Com Corte Pendente", f"{qtd_corte:,}".replace(",", "."),
-              delta="aguardando corte", delta_color="off")
-    c6.empty()
+    c1, c2, c3, c4 = st.columns(4)
+    kpi(c1, "Total Inadimplência",  vl_inad,   prefixo="R$")
+    kpi(c2, "Índice Inadimplência", idx_inad,  prefixo="%")
+    kpi(c3, "Qtd Faturas Vencidas", qtd_fat,   prefixo="")
+    kpi(c4, "Ticket Médio",         tkt_med,   prefixo="R$")
 
     # ── Bloco comparativo — usa faturamento como proxy (inad é snapshot) ──────
     _comp = _comp_periodo()
@@ -2166,7 +2158,7 @@ def pg_inadimplencia(D, d0, d1):
                       xaxis_title="", yaxis_title="",
                       coloraxis_showscale=False)
     fig.update_yaxes(tickformat=",.0f")
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     fi_q = inad.groupby("faixa_atraso").size().reset_index(name="Qtd")
     _cores_inad = ["#E74C3C","#E67E22","#F1C40F","#8E44AD","#2E86C1","#17A589"][:len(fi_q)]
@@ -2189,7 +2181,7 @@ def pg_inadimplencia(D, d0, d1):
                     bgcolor="rgba(255,255,255,0.85)", bordercolor="rgba(180,180,180,0.4)", borderwidth=1),
         paper_bgcolor="rgba(0,0,0,0)",
     )
-    st.plotly_chart(fig2, use_container_width=True)
+    st.plotly_chart(fig2, width="stretch")
     if "nm_bairro_dim" in inad.columns:
         ag_b = inad.groupby("nm_bairro_dim")["vl_divida"].sum()\
                    .sort_values(ascending=True).tail(15).reset_index()
@@ -2211,7 +2203,7 @@ def pg_inadimplencia(D, d0, d1):
             xaxis=dict(title="", tickformat=",.0f"), yaxis=dict(title=""),
             uniformtext_minsize=9, uniformtext_mode="hide",
         )
-        st.plotly_chart(fig3, use_container_width=True)
+        st.plotly_chart(fig3, width="stretch")
 
     # Corte pendente vs não pendente
     if "fl_corte_pendente" in inad.columns:
@@ -2241,21 +2233,99 @@ def pg_inadimplencia(D, d0, d1):
                         bgcolor="rgba(255,255,255,0.85)", bordercolor="rgba(180,180,180,0.4)", borderwidth=1),
             paper_bgcolor="rgba(0,0,0,0)",
         )
-        st.plotly_chart(fig4, use_container_width=True)
+        st.plotly_chart(fig4, width="stretch")
 
-    # Tabela detalhada
-    with st.expander("📋 Tabela — Inadimplência por Bairro e Faixa"):
-        if "nm_bairro_dim" in inad.columns:
-            tb = inad.groupby(["nm_bairro_dim","faixa_atraso"]).agg(
-                Qtd=("vl_divida","count"),
-                Valor=("vl_divida","sum")
-            ).reset_index()
-            tb.columns = ["Bairro","Faixa","Qtd","Valor"]
-            tb = tb.sort_values("Valor", ascending=False)
-            st.dataframe(
-                tb.style.format({"Valor": "R$ {:,.2f}", "Qtd": "{:,}"}),
-                use_container_width=True
-            )
+    # ── Inadimplência por Bairro e Faixa ──────────────────────────────────────
+    if "nm_bairro_dim" in inad.columns:
+        st.markdown("#### Inadimplência por Bairro e Faixa de Atraso")
+
+        tb = inad.groupby(["nm_bairro_dim", "faixa_atraso"]).agg(
+            Qtd=("vl_divida", "count"),
+            Valor=("vl_divida", "sum"),
+        ).reset_index()
+        tb.columns = ["Bairro", "Faixa", "Qtd", "Valor"]
+
+        top15 = (
+            tb.groupby("Bairro")["Valor"].sum()
+            .sort_values(ascending=False)
+            .head(15)
+            .index.tolist()
+        )
+        tb15 = tb[tb["Bairro"].isin(top15)].copy()
+
+        faixas_ord = [
+            "01-Até 30 dias", "02-31 a 60 dias", "03-61 a 90 dias",
+            "04-91 a 180 dias", "05-181 a 365 dias", "06-Mais de 365 dias",
+        ]
+        faixas_cores = {
+            "01-Até 30 dias":       "#27AE60",
+            "02-31 a 60 dias":      "#82C341",
+            "03-61 a 90 dias":      "#F39C12",
+            "04-91 a 180 dias":     "#E67E22",
+            "05-181 a 365 dias":    "#E74C3C",
+            "06-Mais de 365 dias":  "#7B241C",
+        }
+        faixas_label = {
+            "01-Até 30 dias":       "Até 30 dias",
+            "02-31 a 60 dias":      "31–60 dias",
+            "03-61 a 90 dias":      "61–90 dias",
+            "04-91 a 180 dias":     "91–180 dias",
+            "05-181 a 365 dias":    "181–365 dias",
+            "06-Mais de 365 dias":  "+365 dias",
+        }
+
+        bairros_ord = (
+            tb15.groupby("Bairro")["Valor"].sum()
+            .sort_values(ascending=True)
+            .index.tolist()
+        )
+
+        fig_bk = go.Figure()
+        for faixa in faixas_ord:
+            sub = tb15[tb15["Faixa"] == faixa].set_index("Bairro")
+            y_vals  = [sub.loc[b, "Valor"] if b in sub.index else 0 for b in bairros_ord]
+            qtd_vals = [int(sub.loc[b, "Qtd"]) if b in sub.index else 0 for b in bairros_ord]
+            fig_bk.add_trace(go.Bar(
+                name=faixas_label[faixa],
+                y=bairros_ord, x=y_vals, orientation="h",
+                marker_color=faixas_cores[faixa],
+                customdata=qtd_vals,
+                hovertemplate=(
+                    "<b>%{y}</b><br>" + faixas_label[faixa]
+                    + "<br>R$ %{x:,.2f}<br>%{customdata} faturas<extra></extra>"
+                ),
+            ))
+
+        fig_bk.add_vline(
+            x=inad["vl_divida"].sum() / max(len(bairros_ord), 1),
+            line_dash="dot", line_color="rgba(0,0,0,0.25)", line_width=1.5,
+        )
+        fig_bk.update_layout(
+            barmode="stack",
+            margin=dict(t=10, b=0, l=0, r=20),
+            height=max(340, len(bairros_ord) * 36),
+            xaxis=dict(tickprefix="R$ ", tickformat=",.0f", title=""),
+            yaxis=dict(title=""),
+            legend=dict(
+                orientation="h", y=1.06, x=0,
+                traceorder="normal",
+                bgcolor="rgba(255,255,255,0.85)",
+                bordercolor="rgba(0,0,0,0.08)", borderwidth=1,
+            ),
+        )
+        st.plotly_chart(fig_bk, width="stretch", key="inad_bairro_faixa")
+
+        st.markdown("##### Resumo por Bairro (Top 15)")
+        resumo = (
+            tb15.groupby("Bairro")
+            .agg(Faturas=("Qtd", "sum"), Valor=("Valor", "sum"))
+            .sort_values("Valor", ascending=False)
+            .reset_index()
+        )
+        resumo["% do Total"] = (resumo["Valor"] / inad["vl_divida"].sum() * 100).map("{:.1f}%".format)
+        resumo["Valor"]   = resumo["Valor"].map("R$ {:,.2f}".format)
+        resumo["Faturas"] = resumo["Faturas"].map("{:,}".format)
+        st.dataframe(resumo, width="stretch", hide_index=True)
 
 
 def pg_servicos(D, d0, d1):
@@ -2371,7 +2441,7 @@ def _servicos_visao_geral(D, d0, d1):
         hovermode="x unified",
         uniformtext_minsize=8, uniformtext_mode="hide",
     )
-    st.plotly_chart(fig_can, use_container_width=True)
+    st.plotly_chart(fig_can, width="stretch")
 
     # SLA por canal — evolução mensal
     if "fl_fora_prazo" in srv_can.columns:
@@ -2406,7 +2476,7 @@ def _servicos_visao_geral(D, d0, d1):
             hovermode="x unified",
             uniformtext_minsize=8, uniformtext_mode="hide",
         )
-        st.plotly_chart(fig2, use_container_width=True)
+        st.plotly_chart(fig2, width="stretch")
     # Evolução mensal SLA — exclui solicitações internas (mesma regra de srv_can)
     srv_m = srv_can.copy()   # usa srv_can que já excluiu Interno/Automático/Reservado
     srv_m["_mes"] = pd.to_datetime(srv_m["dt_solicitacao"]).dt.strftime("%m/%Y")
@@ -2464,7 +2534,7 @@ def _servicos_visao_geral(D, d0, d1):
         hovermode="x unified",
         uniformtext_minsize=8, uniformtext_mode="hide",
     )
-    st.plotly_chart(fig3, use_container_width=True)
+    st.plotly_chart(fig3, width="stretch")
 
     # Por equipe
     if "nm_equipe" in srv.columns:
@@ -2475,7 +2545,7 @@ def _servicos_visao_geral(D, d0, d1):
                       title="Serviços por Equipe (Top 12)",
                       color_discrete_sequence=[COR["azul_c"]])
         fig4.update_layout(margin=dict(t=35, b=0, l=0, r=20), xaxis_title="", yaxis_title="")
-        st.plotly_chart(fig4, use_container_width=True)
+        st.plotly_chart(fig4, width="stretch")
 
     # Backlog
     if not bkl.empty:
@@ -2495,7 +2565,7 @@ def _servicos_visao_geral(D, d0, d1):
                            "Pendente": COR["vermelho"]
                        })
         fig5.update_layout(margin=dict(t=35, b=0, l=0, r=20), xaxis_title="", yaxis_title="")
-        st.plotly_chart(fig5, use_container_width=True)
+        st.plotly_chart(fig5, width="stretch")
 
 
 def pg_cortes(D, d0, d1):
@@ -2715,7 +2785,7 @@ def pg_cortes(D, d0, d1):
                 bordercolor="rgba(0,0,0,0.1)", borderwidth=1,
             ),
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     # Distribuição por tempo de execução (sol→fim) — em faixas de horas
     if not cor_cavalete.empty and "dt_solicitacao" in cor_cavalete.columns and "dt_fim_execucao" in cor_cavalete.columns:
@@ -2732,7 +2802,7 @@ def pg_cortes(D, d0, d1):
         fig2.update_traces(textposition="outside")
         fig2.update_layout(margin=dict(t=35, b=0, l=0, r=10),
                            xaxis_title="", yaxis_title="Protocolos")
-        st.plotly_chart(fig2, use_container_width=True)
+        st.plotly_chart(fig2, width="stretch")
     if "nm_bairro_dim" in cor.columns:
         ag_b = cor.groupby("nm_bairro_dim")["qt_servico"].sum()\
                   .sort_values(ascending=True).tail(15).reset_index()
@@ -2749,7 +2819,7 @@ def pg_cortes(D, d0, d1):
             cliponaxis=False,
         )
         fig3.update_layout(margin=dict(t=35, b=0, l=0, r=20), xaxis_title="", yaxis_title="")
-        st.plotly_chart(fig3, use_container_width=True)
+        st.plotly_chart(fig3, width="stretch")
 
     if not rel.empty and "dias_corte_religacao" in rel.columns and "id_servico_definicao" in rel.columns:
         rel_hist = rel.copy()
@@ -2769,20 +2839,60 @@ def pg_cortes(D, d0, d1):
         fig4.update_traces(textposition="inside", textfont=dict(size=13))
         fig4.update_layout(margin=dict(t=35, b=0, l=0, r=20),
                            xaxis_title="", yaxis_title="Qtd")
-        st.plotly_chart(fig4, use_container_width=True)
+        st.plotly_chart(fig4, width="stretch")
 
-    # Valor pendência nos cortes
-    if not cor.empty and "vl_pendencia_atual" in cor.columns:
-        st.markdown("#### Valor de Inadimplência nos Cortes")
-        cor_bk = cor.copy()
-        if "nm_bairro_dim" in cor_bk.columns:
-            ag_vl = cor_bk.groupby("nm_bairro_dim")["vl_pendencia_atual"].sum()\
-                          .sort_values(ascending=False).head(10).reset_index()
-            ag_vl.columns = ["Bairro","Valor Pendência"]
-            st.dataframe(
-                ag_vl.style.format({"Valor Pendência": "R$ {:,.2f}"}),
-                use_container_width=True
+    # ── Perfil de Inadimplência por Bairro (fonte: pendencia_atual — snapshot atual) ──
+    pend_all = D.get("inad")
+    if pend_all is not None and not pend_all.empty:
+        st.markdown("#### Perfil de Inadimplência por Bairro")
+        st.caption("Participação percentual de cada bairro no saldo devedor total atual — fonte: pendência atual (snapshot).")
+
+        pend_bk = merge_bairro(pend_all.copy(), D)
+        if "nm_bairro_dim" in pend_bk.columns:
+            total_inad = pend_bk["vl_divida"].sum()
+            ag_pct = (
+                pend_bk.groupby("nm_bairro_dim")["vl_divida"].sum()
+                .sort_values(ascending=False)
+                .head(15)
+                .reset_index()
             )
+            ag_pct.columns = ["Bairro", "vl_divida"]
+            ag_pct["pct"] = ag_pct["vl_divida"] / total_inad * 100
+            ag_pct["txt"] = ag_pct["pct"].apply(lambda v: f"{v:.1f}%")
+            ag_pct = ag_pct.sort_values("pct", ascending=True)
+
+            fig_pct = go.Figure()
+            fig_pct.add_trace(go.Bar(
+                x=ag_pct["pct"],
+                y=ag_pct["Bairro"],
+                orientation="h",
+                text=ag_pct["txt"],
+                textposition="inside",
+                insidetextanchor="middle",
+                textangle=0,
+                textfont=dict(family="Arial Black", color="white", size=13),
+                marker=dict(
+                    color=ag_pct["pct"],
+                    colorscale=[[0, "#5B8FB8"], [1, "#1A3A5C"]],
+                    showscale=False,
+                ),
+                hovertemplate="<b>%{y}</b><br>%{x:.1f}% do total<extra></extra>",
+            ))
+            fig_pct.add_vline(
+                x=100 / len(ag_pct),
+                line_dash="dot", line_color="rgba(0,0,0,0.25)", line_width=1.5,
+                annotation_text=f"Média ({100/len(ag_pct):.1f}%)",
+                annotation_position="top right",
+                annotation_font=dict(size=10, color="rgba(0,0,0,0.45)"),
+            )
+            fig_pct.update_layout(
+                margin=dict(t=30, b=10, l=0, r=30),
+                height=max(320, len(ag_pct) * 34),
+                xaxis=dict(ticksuffix="%", title=""),
+                yaxis=dict(title=""),
+                showlegend=False,
+            )
+            st.plotly_chart(fig_pct, width="stretch", key="cortes_pct_bairro")
 
 
 def pg_leituras(D, d0, d1, _sub=False):
@@ -2863,7 +2973,7 @@ def pg_leituras(D, d0, d1, _sub=False):
                 trace.opacity = 0.6
     fig.update_layout(margin=dict(t=35, b=0, l=0, r=20), xaxis_title="", yaxis_title="")
     fig.update_yaxes(tickformat=",.0f")
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     # ════ Leituras por Referência (Mês) - Stacked por Leiturista ════════════════════
     lei_ref = lei.copy()
@@ -2926,7 +3036,7 @@ def pg_leituras(D, d0, d1, _sub=False):
             hovermode="x unified"
         )
         st.markdown("### Leituras por Referência (Mês) - Distribuição por Leiturista + <span style='color:#E74C3C'>Porcentagens de Leituras Criticadas</span>", unsafe_allow_html=True)
-        st.plotly_chart(fig2, use_container_width=True)
+        st.plotly_chart(fig2, width="stretch")
 
         # Mostrar tabela com detalhe mensal e %Críticas
         st.subheader("Resumo de Leituras por Mês")
@@ -2936,7 +3046,7 @@ def pg_leituras(D, d0, d1, _sub=False):
         resumo["%Críticas"] = resumo["%Críticas"].apply(lambda x: f"{x:.2%}")
         resumo = resumo[["Referência", "Total_Leituras", "Críticas", "%Críticas"]].sort_values("Referência", ascending=False)
         resumo.columns = ["Referência", "Total de Leituras", "Leituras Críticas", "%Críticas"]
-        st.dataframe(resumo.reset_index(drop=True), use_container_width=True)
+        st.dataframe(resumo.reset_index(drop=True), width="stretch")
     # ════ CÁLCULO DE EFICIÊNCIA DE LEITURA ════════════════════════════════════════
     # Passo 1: Total de Leituras Realizadas por Mês (referência)
     lei_m = lei.copy()
@@ -2992,7 +3102,7 @@ def pg_leituras(D, d0, d1, _sub=False):
         hovermode="x unified",
         legend=dict(x=0.5, y=1.15, orientation="h", xanchor="center", yanchor="top"),
     )
-    st.plotly_chart(fig3, use_container_width=True)
+    st.plotly_chart(fig3, width="stretch")
 
     # Por bairro — perdas por alteração de fatura (cancelamento/reemissão)
     alt_fat_filtered = filtrar(D["alt_fat"], "dt_ref", d0, d1)
@@ -3026,7 +3136,7 @@ def pg_leituras(D, d0, d1, _sub=False):
             fig4.update_layout(margin=dict(t=35, b=0, l=0, r=20),
                                xaxis_title="R$", yaxis_title="",
                                coloraxis_showscale=False)
-            st.plotly_chart(fig4, use_container_width=True)
+            st.plotly_chart(fig4, width="stretch")
         else:
             st.info("Sem perdas detectadas no período selecionado")
 
@@ -3107,7 +3217,7 @@ def pg_frota_combustivel(D, d0, d1):
         margin=dict(t=50, b=0, l=250, r=30),
         height=400
     )
-    st.plotly_chart(fig_motorista, use_container_width=True)
+    st.plotly_chart(fig_motorista, width="stretch")
 
     st.markdown("---")
 
@@ -3138,7 +3248,7 @@ def pg_frota_combustivel(D, d0, d1):
         margin=dict(t=50, b=0, l=150, r=30),
         height=400
     )
-    st.plotly_chart(fig_veiculo, use_container_width=True)
+    st.plotly_chart(fig_veiculo, width="stretch")
 
     st.markdown("---")
 
@@ -3168,7 +3278,7 @@ def pg_frota_combustivel(D, d0, d1):
         legend=dict(orientation="h", y=1.1)
     )
     fig_temporal.update_yaxes(tickformat=".0f")
-    st.plotly_chart(fig_temporal, use_container_width=True)
+    st.plotly_chart(fig_temporal, width="stretch")
 
     st.markdown("---")
 
@@ -3187,7 +3297,7 @@ def pg_frota_combustivel(D, d0, d1):
     fig_scatter.update_layout(margin=dict(t=50, b=0, l=0, r=30), height=350)
     fig_scatter.update_xaxes(tickformat=".0f")
     fig_scatter.update_yaxes(tickformat="$,.2f")
-    st.plotly_chart(fig_scatter, use_container_width=True)
+    st.plotly_chart(fig_scatter, width="stretch")
 
     st.markdown("---")
 
@@ -3215,7 +3325,7 @@ def pg_frota_combustivel(D, d0, d1):
     tbl_view["Km"] = tbl_view["Km"].apply(lambda x: f"{x:.0f}")
     tbl_view["Eficiência (km/L)"] = tbl_view["Eficiência (km/L)"].apply(lambda x: f"{x:.2f}")
 
-    st.dataframe(tbl_view, use_container_width=True, hide_index=True, height=500)
+    st.dataframe(tbl_view, width="stretch", hide_index=True, height=500)
 
     # Resumo final
     st.markdown("---")
@@ -3289,7 +3399,7 @@ def pg_energia(D, d0, d1):
     )
     fig_uc.update_layout(margin=dict(t=50, b=0, l=200, r=30), height=500, showlegend=False)
     fig_uc.update_traces(text=[f"R$ {v:,.0f}" for v in ene_uc.values], textposition="outside")
-    st.plotly_chart(fig_uc, use_container_width=True)
+    st.plotly_chart(fig_uc, width="stretch")
 
     st.markdown("---")
 
@@ -3320,7 +3430,7 @@ def pg_energia(D, d0, d1):
         legend=dict(orientation="h", y=1.1)
     )
     fig_ts.update_yaxes(tickformat="$,.0f")
-    st.plotly_chart(fig_ts, use_container_width=True)
+    st.plotly_chart(fig_ts, width="stretch")
 
     st.markdown("---")
 
@@ -3363,7 +3473,7 @@ def pg_energia(D, d0, d1):
         .format({"Valor (R$)": lambda v: f"R$ {v:>10,.2f}" if isinstance(v, float) else v})
         .apply(lambda row: ["font-weight:bold; background:#E8F4FD"]*len(row)
                if row["UC"]=="TOTAL" else [""]*len(row), axis=1),
-        use_container_width=True,
+        width="stretch",
         height=400,
     )
 
@@ -3373,7 +3483,7 @@ def pg_energia(D, d0, d1):
         st.markdown("#### Unidades de Consumo")
         d_uc_view = d_uc.copy()
         d_uc_view.columns = ["UC", "Localização", "Tipo Contrato", "Fornecedor", "Status"]
-        st.dataframe(d_uc_view, use_container_width=True)
+        st.dataframe(d_uc_view, width="stretch")
 
     # Análise de Desconto (Matrix e EchoEnergia)
     desc_ene = D.get("desc_ene", pd.DataFrame())
@@ -3411,7 +3521,7 @@ def pg_energia(D, d0, d1):
                              color_discrete_map={"Matrix": COR["azul"], "EchoEnergia": COR["verde"]})
             fig_desc.update_layout(margin=dict(t=50, b=0, l=0, r=20), height=350, showlegend=False)
             fig_desc.update_traces(text=[f"R$ {v:,.0f}" for v in desc_fornecedor["desconto_r"]], textposition="outside")
-            st.plotly_chart(fig_desc, use_container_width=True)
+            st.plotly_chart(fig_desc, width="stretch")
 
             # Tabela detalhada
             st.markdown("#### Descontos por Período e UC")
@@ -3423,7 +3533,7 @@ def pg_energia(D, d0, d1):
                 desc_table.style
                 .format({"Valor Pago": "R$ {:,.2f}", "Valor Cheio": "R$ {:,.2f}",
                         "Desconto (R$)": "R$ {:,.2f}", "Desconto (%)": "{:.2f}%"}),
-                use_container_width=True,
+                width="stretch",
                 height=400
             )
         else:
@@ -3477,7 +3587,7 @@ def _render_setor_bloco(srv_bloco, setor_nome, cor_barra, _key_prefix=""):
         showlegend=False,
     )
     _slug = setor_nome.replace(" ", "_").replace("/", "_")
-    col1.plotly_chart(fig_sla, use_container_width=True,
+    col1.plotly_chart(fig_sla, width="stretch",
                       key=f"{_key_prefix}sla_{_slug}")
 
     # ── Gráfico B — Serviços por equipe ────────────────────────────────────
@@ -3499,7 +3609,7 @@ def _render_setor_bloco(srv_bloco, setor_nome, cor_barra, _key_prefix=""):
             xaxis=dict(title=""), yaxis=dict(title=""),
             uniformtext_minsize=8, uniformtext_mode="hide",
         )
-        col2.plotly_chart(fig_eq, use_container_width=True,
+        col2.plotly_chart(fig_eq, width="stretch",
                           key=f"{_key_prefix}eq_{_slug}")
 
 
@@ -3712,7 +3822,7 @@ def pg_perdas(D, d0, d1):
         yaxis=dict(ticksuffix="%", range=[0, max(df_f["pct_perda"].max() * 1.15, _META_PERDA * 1.3)]),
         showlegend=False,
     )
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     # ── Gráfico volumes: tratado vs faturado ─────────────────────────────────
     st.markdown("#### Volume Tratado vs Faturado (m³/mês)")
@@ -3737,7 +3847,7 @@ def pg_perdas(D, d0, d1):
         xaxis_title="", yaxis_title="m³",
         legend=dict(orientation="h", yanchor="bottom", y=1.01, xanchor="left", x=0),
     )
-    st.plotly_chart(fig2, use_container_width=True)
+    st.plotly_chart(fig2, width="stretch")
 
     # ── Tabela resumo ─────────────────────────────────────────────────────────
     st.markdown("#### Tabela Mensal de Perdas")
@@ -3748,7 +3858,7 @@ def pg_perdas(D, d0, d1):
     tbl["Perdido (m³)"]  = tbl["Perdido (m³)"].apply(lambda v: f"{v:,.0f}".replace(",","."))
     tbl["% Perda"]       = tbl["% Perda"].apply(lambda v: f"{v:.1f}%")
     st.dataframe(tbl.sort_values("Mês", ascending=False).reset_index(drop=True),
-                 use_container_width=True, hide_index=True)
+                 width="stretch", hide_index=True)
 
 
 # COCKPIT — TRATAMENTO
@@ -3844,7 +3954,7 @@ def pg_tratamento(D, d0, d1):
             legend=dict(orientation="h", y=1.12),
         )
         fig1.update_yaxes(tickformat=",.0f")
-        st.plotly_chart(fig1, use_container_width=True)
+        st.plotly_chart(fig1, width="stretch")
 
         # ── Gráfico 2 — Composição % Ipameri vs Domiciano (barras empilhadas) ──
         fig2 = go.Figure()
@@ -3862,7 +3972,7 @@ def pg_tratamento(D, d0, d1):
             legend=dict(orientation="h", y=1.12),
         )
         fig2.update_yaxes(tickformat=",.0f")
-        st.plotly_chart(fig2, use_container_width=True)
+        st.plotly_chart(fig2, width="stretch")
 
         st.markdown("---")
         st.markdown("#### Gasto de Insumos (kg/mês)")
@@ -3899,7 +4009,7 @@ def pg_tratamento(D, d0, d1):
             legend=dict(orientation="h", y=1.12),
         )
         fig3.update_yaxes(tickformat=",.0f")
-        st.plotly_chart(fig3, use_container_width=True)
+        st.plotly_chart(fig3, width="stretch")
 
         # KPIs insumos do período
         if not insumos_f.empty:
@@ -3918,7 +4028,7 @@ def pg_tratamento(D, d0, d1):
         tbl = tbl.sort_values("Mês", ascending=False)
         st.dataframe(
             tbl.style.format({"Ipameri (m³)": "{:,.0f}", "Domiciano (m³)": "{:,.0f}", "Total (m³)": "{:,.0f}"}),
-            use_container_width=True, hide_index=True,
+            width="stretch", hide_index=True,
         )
 
     # ══════════════════════════════════════════════════════════════════════════
@@ -4019,7 +4129,7 @@ def pg_tratamento(D, d0, d1):
             rows_tbl.append(row)
 
         df_tbl = pd.DataFrame(rows_tbl)
-        st.dataframe(df_tbl, use_container_width=True, hide_index=True, height=600)
+        st.dataframe(df_tbl, width="stretch", hide_index=True, height=600)
 
         # ── Gráfico radar médias ───────────────────────────────────────────────
         st.markdown("#### Médias dos Parâmetros Numéricos")
@@ -4052,7 +4162,7 @@ def pg_tratamento(D, d0, d1):
                 title=f"Médias dos Parâmetros — {sis_sel} | {mes_sel}",
                 margin=dict(t=40, b=0, l=0, r=20), height=320, showlegend=False,
             )
-            st.plotly_chart(fig_med, use_container_width=True)
+            st.plotly_chart(fig_med, width="stretch")
 
 
 # ── Navegação ─────────────────────────────────────────────────────────────────
