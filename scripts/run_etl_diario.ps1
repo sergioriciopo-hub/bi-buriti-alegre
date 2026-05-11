@@ -49,20 +49,18 @@ Log "Publicando no GitHub (Streamlit Cloud)..."
 $today = Get-Date -Format "dd/MM/yyyy"
 
 try {
-    # Adicionar todos os parquets rastreados (modificados pelo ETL)
-    & git add "data/" 2>&1 | Out-Null
-    # Adicionar scripts se houver alteracoes (ex: etl_bigquery.py atualizado)
-    & git add "scripts/" 2>&1 | Out-Null
+    # Adicionar TUDO que mudou (dados, app.py, scripts, config, etc.)
+    & git add -A 2>&1 | Out-Null
 
-    $commitMsg = & git commit -m "Dados atualizados - $today [auto]" 2>&1
+    $commitMsg = & git commit -m "Atualizacao - $today [auto]" 2>&1
 
-    if ($LASTEXITCODE -eq 0 -and $commitMsg -notmatch "nothing to commit") {
+    if ($LASTEXITCODE -eq 0 -and ($commitMsg -notmatch "nothing to commit")) {
         Add-Content $logFile ($commitMsg | Out-String)
         $pushOut = & git push origin main 2>&1
         Add-Content $logFile ($pushOut | Out-String)
         Log "Publicado no GitHub com SUCESSO - Streamlit Cloud atualizara em ~2 min"
     } else {
-        Log "Sem alteracoes para publicar"
+        Log "Sem alteracoes para publicar (projeto ja esta atualizado)"
     }
 } catch {
     Log "ERRO na publicacao GitHub: $_"
