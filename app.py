@@ -795,7 +795,7 @@ def calcular_sla_religacao(rel_df):
     rel["_dt_fim"] = pd.to_datetime(rel["dt_fim_execucao"])
 
     def _prazo(row):
-        if row.get("id_servico_definicao") == 329:
+        if row.get("id_servico_definicao") == 412:  # Religação de Urgência
             return 6 if _eh_expediente(row["_dt_sol"]) else 14
         return 24
 
@@ -2528,11 +2528,15 @@ def pg_cortes(D, d0, d1):
     # Religações com SLA calculado
     rel = calcular_sla_religacao(rel)
 
+    # Buriti: 410=simples, 411=ramal, 412=urgência, 409=reativação ramal
+    REL_NORMAL  = [410, 411]
+    REL_URGENTE = [412]
+    REL_TODOS   = [409, 410, 411, 412]
     if not rel.empty and "id_servico_definicao" in rel.columns:
-        rel_normal  = rel[rel["id_servico_definicao"] == 56]
-        rel_urgente = rel[rel["id_servico_definicao"] == 329]
-        rel_outros  = rel[~rel["id_servico_definicao"].isin([56, 329])]
-        rel_cav     = rel[rel["id_servico_definicao"].isin([56, 329])]
+        rel_normal  = rel[rel["id_servico_definicao"].isin(REL_NORMAL)]
+        rel_urgente = rel[rel["id_servico_definicao"].isin(REL_URGENTE)]
+        rel_outros  = rel[~rel["id_servico_definicao"].isin(REL_TODOS)]
+        rel_cav     = rel[rel["id_servico_definicao"].isin(REL_TODOS)]
     else:
         rel_normal = rel_urgente = rel_outros = rel_cav = rel
 
@@ -2563,16 +2567,16 @@ def pg_cortes(D, d0, d1):
 
     # ── KPIs — linha 2: SLA religações ───────────────────────────────────────
     r1, r2, r3, r4, r5 = st.columns(5)
-    kpi(r1, "Normal (24h)",        qtd_rel_normal,  prefixo="")
-    kpi(r2, "% Normal no Prazo",   sla_rel_normal,  prefixo="%", delta_inv=False)
-    kpi(r3, "Urgente (6h/14h)",    qtd_rel_urgente, prefixo="")
-    kpi(r4, "% Urgente no Prazo",  sla_rel_urgente, prefixo="%", delta_inv=False)
+    kpi(r1, "Normal/Ramal (24h)",   qtd_rel_normal,  prefixo="")
+    kpi(r2, "% Normal no Prazo",    sla_rel_normal,  prefixo="%", delta_inv=False)
+    kpi(r3, "Urgência (6h/14h)",    qtd_rel_urgente, prefixo="")
+    kpi(r4, "% Urgência no Prazo",  sla_rel_urgente, prefixo="%", delta_inv=False)
     kpi_str(r5, "Outros tipos", f"{qtd_rel_outros:,}".replace(",", "."),
-            help="Ramal, reativação etc.")
+            help="Tipos fora de 409/410/411/412")
 
     st.caption(
-        "SLA: Normal = 24h | Urgente expediente (seg-sex 08–18h) = 6h | "
-        "Urgente fora expediente/feriado = 14h — contado a partir da solicitação (dt_solicitacao)"
+        "SLA: Normal/Ramal (410/411) = 24h | Urgência (412) expediente (seg-sex 08–18h) = 6h | "
+        "Urgência fora expediente/feriado = 14h — contado a partir da solicitação (dt_solicitacao)"
     )
 
     # ── Bloco comparativo ─────────────────────────────────────────────────────
@@ -2585,13 +2589,13 @@ def pg_cortes(D, d0, d1):
         _rel_c = filtrar(D["rel"], "dt_reliagacao", _cd0, _cd1)
         _rel_c = calcular_sla_religacao(_rel_c)
         if not _rel_c.empty and "id_servico_definicao" in _rel_c.columns:
-            _rel_cav_c = _rel_c[_rel_c["id_servico_definicao"].isin([56, 329])]
+            _rel_cav_c = _rel_c[_rel_c["id_servico_definicao"].isin([409, 410, 411, 412])]
         else:
             _rel_cav_c = _rel_c
         _co_c  = int(_cor_c["id_servico"].nunique()) if not _cor_c.empty and "id_servico" in _cor_c.columns else 0
         _re_c  = int(_rel_cav_c["id_servico"].nunique()) if not _rel_cav_c.empty and "id_servico" in _rel_cav_c.columns else 0
         _tx_c  = _re_c / _co_c if _co_c else 0
-        _sn_c  = _sla(_rel_c[_rel_c["id_servico_definicao"] == 56]) if not _rel_c.empty and "id_servico_definicao" in _rel_c.columns else 0
+        _sn_c  = _sla(_rel_c[_rel_c["id_servico_definicao"].isin([410, 411])]) if not _rel_c.empty and "id_servico_definicao" in _rel_c.columns else 0
         render_comp_bloco(_comp["label_atual"], _comp["label_comp"], [
             ("Cortes Executados",      qtd_cor,        _co_c, lambda v: f"{int(v):,}",  False),
             ("Religações (cavalete)",  qtd_rel,        _re_c, lambda v: f"{int(v):,}",  None),
@@ -2745,7 +2749,7 @@ def pg_cortes(D, d0, d1):
     if not rel.empty and "dias_corte_religacao" in rel.columns and "id_servico_definicao" in rel.columns:
         rel_hist = rel.copy()
         rel_hist["Tipo Religação"] = rel_hist["id_servico_definicao"].map(
-            {56: "Normal", 329: "Urgente"}).fillna("Outros")
+            {410: "Normal", 411: "Ramal", 412: "Urgência", 409: "Reativação"}).fillna("Outros")
         bins_d   = [0, 1, 2, 3, 4, 5, float("inf")]
         labels_d = ["1 dia", "2 dias", "3 dias", "4 dias", "5 dias", "Acima de 5 dias"]
         rel_hist["Faixa"] = pd.cut(rel_hist["dias_corte_religacao"],
