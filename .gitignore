@@ -1,18 +1,21 @@
-*.md
-*.bat
-*.txt
+# Cache Python
 __pycache__/
 *.pyc
+
+# OS
 .DS_Store
-config.toml.txt
-.streamlit/
-# Ignorar todos os parquets da pasta data/, exceto os de frota
-data/*.parquet
-!data/frota_combustivel.parquet
-!data/dim_veiculo_frota.parquet
+
+# Logs
+*.log
+etl.log
+
+# Scripts sensíveis (service account embutido)
 scripts/etl_energia*.py
 scripts/consolidar_energia*.py
 scripts/gerar_dim*.py
 scripts/monitorar_energia.py
 scripts/upload_energia*.py
 scripts/agendar_monitor*.bat
+
+# Parquets: excluir tudo EXCETO os de dados (necessários para o Streamlit Cloud)
+# Os parquets são gerados pelo ETL local e commitados para o deploy
