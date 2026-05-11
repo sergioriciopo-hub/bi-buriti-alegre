@@ -19,7 +19,7 @@ BASE_DIR = Path(__file__).parent.parent
 KEY_PATH = Path(r"C:\Users\SérgioRiciopo\AGUAS DE IPAMERI\03 COMERCIAL - Documentos\01 - Projetos e Propostas\Jtech\DATA SET\buriti type service account_28.04.2026.json")
 DATA_DIR = BASE_DIR / "data"
 PROJECT   = "br-ist-jtech-clientes"
-DATASET   = "jtechbi_buriti"  # confirmar nome real do dataset com Jtech
+DATASET   = "jtechbi_buritialegre"
 
 logging.basicConfig(
     level=logging.INFO,

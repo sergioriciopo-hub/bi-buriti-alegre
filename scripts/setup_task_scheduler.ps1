@@ -1,12 +1,12 @@
 ﻿# ═══════════════════════════════════════════════════════════════════════════
-# Setup Task Scheduler - ETL Águas de Ipameri
+# Setup Task Scheduler - ETL Buriti Alegre Ambiental
 # Executar como Administrador
 # ═══════════════════════════════════════════════════════════════════════════
 
-$taskName = "ETL-BigQuery-Ipameri"
-$taskFolder = "Águas de Ipameri"
-$scriptPath = "C:\BI_Ipameri\scripts\run_etl.bat"
-$time = "06:00"
+$taskName = "ETL-BigQuery-BuritiAlegre"
+$taskFolder = "Buriti Alegre Ambiental"
+$scriptPath = "C:\BI_BuritiAlegre\scripts\run_etl.bat"
+$time = "07:30"
 
 Write-Host "═════════════════════════════════════════════════════════════"
 Write-Host "Configurando Task Scheduler para ETL"

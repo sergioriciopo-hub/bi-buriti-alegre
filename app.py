@@ -70,7 +70,7 @@ footer { display:none !important; }
 
 /* ═══ SIDEBAR ═══════════════════════════════════════════════════════════════ */
 [data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #1e4d6d 0%, #2a5f7f 100%) !important;
+    background: linear-gradient(180deg, #1B5E20 0%, #2E7D32 100%) !important;
     border-right: none !important;
     box-shadow: 2px 0 12px rgba(0,0,0,.08) !important;
     overflow-y:auto !important;
@@ -101,7 +101,7 @@ footer { display:none !important; }
     transition: all 0.25s ease !important;
 }
 [data-testid="stSidebar"] [data-baseweb="select"] svg { fill:white !important; }
-[data-testid="stSidebar"] [data-baseweb="popover"] { background:#1e4d6d !important; }
+[data-testid="stSidebar"] [data-baseweb="popover"] { background:#1B5E20 !important; }
 [data-testid="stSidebar"] [data-baseweb="popover"] li { color:white !important; }
 [data-testid="stSidebar"] [data-baseweb="popover"] li:hover {
     background:rgba(255,255,255,.08) !important;
@@ -214,7 +214,7 @@ footer { display:none !important; }
 }
 
 /* ═══ MAIN BACKGROUND ═══════════════════════════════════════════════════════ */
-.stApp { background: linear-gradient(135deg, #f5f9fc 0%, #f0f6fa 100%) !important; }
+.stApp { background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e9 100%) !important; }
 .block-container {
     padding-top:4.5rem !important; padding-bottom:2.5rem !important;
     max-width:1400px !important;
@@ -227,21 +227,21 @@ footer { display:none !important; }
     background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%) !important;
     border-radius:16px !important;
     padding:20px 24px 16px !important;
-    box-shadow: 0 1px 6px rgba(0,0,0,.04), 0 4px 12px rgba(13,63,99,.06) !important;
-    border:1px solid rgba(26,111,173,.06) !important;
+    box-shadow: 0 1px 6px rgba(0,0,0,.04), 0 4px 12px rgba(27,94,32,.06) !important;
+    border:1px solid rgba(46,125,50,.08) !important;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 [data-testid="metric-container"]:hover {
     transform: translateY(-4px) !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,.06), 0 8px 20px rgba(13,63,99,.12) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,.06), 0 8px 20px rgba(27,94,32,.12) !important;
 }
 [data-testid="stMetricValue"] {
     font-size: 1.65rem !important; font-weight: 700 !important;
-    color: #0d3f63 !important; letter-spacing: -0.5px !important;
+    color: #1B5E20 !important; letter-spacing: -0.5px !important;
     line-height: 1.2 !important;
 }
 [data-testid="stMetricLabel"] {
-    font-size: 0.7rem !important; color: #6a8cb5 !important;
+    font-size: 0.7rem !important; color: #558B2F !important;
     font-weight: 600 !important; text-transform: uppercase !important;
     letter-spacing: 0.6px !important;
     margin-top: 0.5rem !important;
@@ -249,51 +249,51 @@ footer { display:none !important; }
 [data-testid="stMetricDelta"] { font-size: 0.85rem !important; font-weight: 500 !important; }
 
 /* ═══ HEADINGS ═══════════════════════════════════════════════════════════════ */
-h1 { color: #0d3f63 !important; font-weight: 700 !important; font-size: 1.45rem !important; margin: 1.5rem 0 0.75rem !important; }
-h2 { color: #1e5580 !important; font-size: 1.15rem !important; font-weight: 600 !important; margin: 1.25rem 0 0.75rem !important; }
-h3 { color: #2a5f7f !important; font-size: 1.0rem !important; font-weight: 600 !important; }
-h4 { color: #3a6f8f !important; font-size: 0.95rem !important; font-weight: 600 !important; }
+h1 { color: #1B5E20 !important; font-weight: 700 !important; font-size: 1.45rem !important; margin: 1.5rem 0 0.75rem !important; }
+h2 { color: #2E7D32 !important; font-size: 1.15rem !important; font-weight: 600 !important; margin: 1.25rem 0 0.75rem !important; }
+h3 { color: #388E3C !important; font-size: 1.0rem !important; font-weight: 600 !important; }
+h4 { color: #43A047 !important; font-size: 0.95rem !important; font-weight: 600 !important; }
 p, span, div { line-height: 1.6 !important; }
 
 /* ═══ CHARTS ═════════════════════════════════════════════════════════════════ */
 .stPlotlyChart > div {
     background: white !important; border-radius: 16px !important;
-    box-shadow: 0 1px 4px rgba(0,0,0,.03), 0 4px 12px rgba(13,63,99,.05) !important;
-    border: 1px solid rgba(26,111,173,.06) !important;
+    box-shadow: 0 1px 4px rgba(0,0,0,.03), 0 4px 12px rgba(27,94,32,.05) !important;
+    border: 1px solid rgba(46,125,50,.06) !important;
     padding: 8px !important;
     transition: all 0.3s ease !important;
 }
 .stPlotlyChart > div:hover {
-    box-shadow: 0 2px 8px rgba(0,0,0,.05), 0 8px 16px rgba(13,63,99,.08) !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,.05), 0 8px 16px rgba(27,94,32,.08) !important;
 }
 
 /* ═══ DATAFRAMES ═════════════════════════════════════════════════════════════ */
 [data-testid="stDataFrame"] {
     border-radius: 14px !important; overflow: hidden !important;
-    box-shadow: 0 1px 4px rgba(0,0,0,.03), 0 4px 10px rgba(13,63,99,.05) !important;
-    border: 1px solid rgba(26,111,173,.06) !important;
+    box-shadow: 0 1px 4px rgba(0,0,0,.03), 0 4px 10px rgba(27,94,32,.05) !important;
+    border: 1px solid rgba(46,125,50,.06) !important;
     transition: all 0.3s ease !important;
 }
 [data-testid="stDataFrame"]:hover {
-    box-shadow: 0 2px 8px rgba(0,0,0,.05), 0 8px 16px rgba(13,63,99,.08) !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,.05), 0 8px 16px rgba(27,94,32,.08) !important;
 }
 
 /* ═══ EXPANDER ═══════════════════════════════════════════════════════════════ */
 .streamlit-expanderHeader {
-    background: linear-gradient(135deg, #f8fafb 0%, #f5f8fa 100%) !important;
+    background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e9 100%) !important;
     border-radius: 12px !important;
-    border: 1px solid rgba(26,111,173,.08) !important;
-    font-weight: 600 !important; color: #0d3f63 !important;
+    border: 1px solid rgba(46,125,50,.12) !important;
+    font-weight: 600 !important; color: #1B5E20 !important;
     transition: all 0.25s ease !important;
     padding: 12px 16px !important;
 }
 .streamlit-expanderHeader:hover {
     background: linear-gradient(135deg, #f0f4f8 0%, #eff2f7 100%) !important;
-    border-color: rgba(26,111,173,.12) !important;
+    border-color: rgba(46,125,50,.12) !important;
 }
 .streamlit-expanderContent {
-    background: #fafbfc !important;
-    border: 1px solid rgba(26,111,173,.06) !important;
+    background: #f9fdf4 !important;
+    border: 1px solid rgba(46,125,50,.08) !important;
     border-top: none !important; border-radius: 0 0 12px 12px !important;
     padding: 16px !important;
 }
@@ -301,19 +301,19 @@ p, span, div { line-height: 1.6 !important; }
 /* ═══ INPUTS & SELECTIONS ═══════════════════════════════════════════════════ */
 input[type="text"], input[type="number"], input[type="date"] {
     border-radius: 10px !important;
-    border: 1px solid rgba(26,111,173,.12) !important;
+    border: 1px solid rgba(46,125,50,.12) !important;
     transition: all 0.25s ease !important;
     padding: 8px 12px !important;
 }
 input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus {
-    border-color: rgba(26,111,173,.3) !important;
-    box-shadow: 0 0 0 3px rgba(26,111,173,.08) !important;
+    border-color: rgba(46,125,50,.3) !important;
+    box-shadow: 0 0 0 3px rgba(46,125,50,.08) !important;
 }
 
 /* ═══ MISC ═══════════════════════════════════════════════════════════════════ */
 .stAlert { border-radius: 12px !important; padding: 14px 16px !important; }
 [data-baseweb="notification"] { border-radius: 12px !important; }
-hr { border-color: rgba(26,111,173,.08) !important; margin: 1.5rem 0 !important; }
+hr { border-color: rgba(46,125,50,.08) !important; margin: 1.5rem 0 !important; }
 .stMarkdown { font-size: 0.95rem !important; }
 
 /* Remove tooltips and descriptions */
@@ -439,22 +439,22 @@ def merge_leiturista(df, D):
 # ── Filtro de período ─────────────────────────────────────────────────────────
 def sidebar_periodo():
     import base64
-    logo_path = Path(__file__).parent / "LOGO" / "logo_aguas_de_ipameri_escuro.png"
+    logo_path = Path(__file__).parent / "Logo" / "BA_COLOR_HOR_negativo.png"
     if logo_path.exists():
         with open(logo_path, "rb") as f:
             logo_b64 = base64.b64encode(f.read()).decode()
         st.sidebar.markdown(f"""
-<div style="padding:0 14px 8px; text-align:center;">
+<div style="padding:16px 14px 10px; text-align:center;">
   <img src="data:image/png;base64,{logo_b64}"
-       style="width:100%;max-width:110px;height:auto;display:block;margin:0 auto;filter:brightness(0) invert(1);" />
+       style="width:100%;max-width:160px;height:auto;display:block;margin:0 auto;" />
   <div style="font-size:0.56rem;color:rgba(255,255,255,.55);letter-spacing:1.3px;
-              text-transform:uppercase;margin-top:6px;">Business Intelligence</div>
+              text-transform:uppercase;margin-top:8px;">Business Intelligence</div>
 </div>
 """, unsafe_allow_html=True)
     else:
         st.sidebar.markdown("""
 <div style="text-align:center;padding:28px 0 18px;">
-    <div style="font-size:2.6rem;line-height:1;">💧</div>
+    <div style="font-size:2.6rem;line-height:1;">🌿</div>
     <div style="font-size:1.05rem;font-weight:700;color:white;
                 margin-top:10px;letter-spacing:.4px;">Buriti Alegre Ambiental</div>
     <div style="font-size:0.62rem;color:rgba(255,255,255,.52);
@@ -675,7 +675,7 @@ def render_comp_bloco(lbl_atual, lbl_comp, rows):
         _tc = fmt_fn(vc) if vc is not None else "—"
         _d  = _fmt_delta(_dp(va if va else 0, vc if vc else 0), melhor)
         _html_rows += (
-            f'<tr style="border-top:1px solid rgba(26,111,173,.06);">'
+            f'<tr style="border-top:1px solid rgba(46,125,50,.06);">'
             f'<td style="padding:7px 12px;color:#374151;font-size:.83rem;">{nome}</td>'
             f'<td style="padding:7px 12px;text-align:right;font-weight:700;color:#2E7D32;font-size:.85rem;">{_ta}</td>'
             f'<td style="padding:7px 12px;text-align:right;color:#6b7280;font-size:.83rem;">{_tc}</td>'
@@ -684,10 +684,10 @@ def render_comp_bloco(lbl_atual, lbl_comp, rows):
         )
 
     st.markdown(f"""
-<div style="background:white;border-radius:14px;border:1px solid rgba(26,111,173,.10);
+<div style="background:white;border-radius:14px;border:1px solid rgba(46,125,50,.10);
      box-shadow:0 2px 8px rgba(0,0,0,.05);overflow:hidden;margin:4px 0 12px;">
   <div style="background:linear-gradient(135deg,#f0f6fb,#e8f3fb);padding:8px 12px;
-       display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(26,111,173,.08);">
+       display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(46,125,50,.08);">
     <span style="font-size:.72rem;font-weight:700;text-transform:uppercase;
           letter-spacing:.7px;color:#2E7D32;">📊 Comparativo de Período</span>
   </div>
@@ -942,7 +942,7 @@ def page_header(titulo, periodo_str=""):
             background:linear-gradient(135deg,{c1} 0%,{c2} 100%);
             border-radius:12px; padding:14px 20px 10px;
             margin-bottom:12px;
-            box-shadow:0 2px 12px rgba(13,63,99,.15);">
+            box-shadow:0 2px 12px rgba(27,94,32,.15);">
           <div style="color:white;font-size:1.15rem;font-weight:700;
                       letter-spacing:-.2px;">{titulo}</div>
           {per}
@@ -1813,7 +1813,7 @@ def pg_arrecadacao(D, d0, d1):
     fig = px.line(ag_m, x="Mês", y="Valor", color="Tipo", markers=True,
                   title="Faturado vs Arrecadado — Histórico completo",
                   color_discrete_map={"Faturado": COR["azul"], "Arrecadado": COR["verde"]})
-    fig.add_vrect(x0=d0, x1=d1, fillcolor="rgba(26,111,173,0.08)",
+    fig.add_vrect(x0=d0, x1=d1, fillcolor="rgba(46,125,50,0.08)",
                   line_width=0, annotation_text="Período atual", annotation_position="top left")
     _comp = _comp_periodo()
     if _comp:
@@ -3813,7 +3813,7 @@ def pg_tratamento(D, d0, d1):
             x=prod_hist["data"], y=prod_hist["vol_ipameri"],
             name="Ipameri", mode="lines+markers",
             line=dict(color=COR["azul"], width=2),
-            fill="tozeroy", fillcolor="rgba(26,111,173,0.12)",
+            fill="tozeroy", fillcolor="rgba(46,125,50,0.12)",
         ))
         fig1.add_trace(go.Scatter(
             x=prod_hist["data"], y=prod_hist["vol_domiciano"],
@@ -3827,7 +3827,7 @@ def pg_tratamento(D, d0, d1):
             line=dict(color="#7C3AED", width=2, dash="dot"),
         ))
         # Destaca período selecionado
-        fig1.add_vrect(x0=d0, x1=d1, fillcolor="rgba(26,111,173,0.07)",
+        fig1.add_vrect(x0=d0, x1=d1, fillcolor="rgba(46,125,50,0.07)",
                        line_width=0, annotation_text="Período", annotation_position="top left")
         fig1.update_layout(
             title="Volume Produzido Mensal (m³) — Histórico",
@@ -3882,7 +3882,7 @@ def pg_tratamento(D, d0, d1):
 
         # Período filtrado
         insumos_f = insumos_hist[(insumos_hist["data"] >= d0) & (insumos_hist["data"] <= d1)]
-        fig3.add_vrect(x0=d0, x1=d1, fillcolor="rgba(26,111,173,0.07)",
+        fig3.add_vrect(x0=d0, x1=d1, fillcolor="rgba(46,125,50,0.07)",
                        line_width=0, annotation_text="Período", annotation_position="top left")
         fig3.update_layout(
             title="Insumos de Tratamento — Histórico Mensal (kg)",

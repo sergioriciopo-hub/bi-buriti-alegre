@@ -1,7 +1,7 @@
 # ETL Diario Completo - BigQuery + Frota Combustivel
 # Agendado para: todos os dias as 07:30
 
-$projectDir = "C:\BI_Ipameri"
+$projectDir = "C:\BI_BuritiAlegre"
 $logDir     = Join-Path $projectDir "scripts\logs"
 $logFile    = Join-Path $logDir ("etl_diario_" + (Get-Date -Format "yyyyMMdd_HHmm") + ".log")
 
@@ -16,7 +16,7 @@ function Log($msg) {
 }
 
 Log "======================================================"
-Log "INICIO ETL DIARIO - Aguas de Ipameri"
+Log "INICIO ETL DIARIO - Buriti Alegre Ambiental"
 Log "======================================================"
 
 Set-Location $projectDir
