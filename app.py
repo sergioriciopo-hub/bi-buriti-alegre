@@ -2945,13 +2945,34 @@ def pg_leituras(D, d0, d1, _sub=False):
         ])
 
     st.markdown("---")
+    MESES_PT_ABR = ["","Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"]
     lei_m = lei.copy()
     lei_m["_mes"] = pd.to_datetime(lei_m["dt_ref"]).dt.to_period("M").dt.to_timestamp()
     ag = lei_m.groupby("_mes").agg(
         Lido=("qt_volume_lido","sum"),
         Faturado=("qt_volume_faturado","sum")
     ).reset_index().rename(columns={"_mes":"Mês"})
-    ag_m = ag.melt(id_vars="Mês", var_name="Tipo", value_name="m³")
+    ag = ag.sort_values("Mês")
+    ag["label"] = ag["Mês"].apply(lambda d: f"{MESES_PT_ABR[d.month]}/{str(d.year)[2:]}")
+
+    _fmt_m3 = lambda v: f"{v/1000:.1f}k" if v >= 1000 else str(int(v))
+
+    fig = go.Figure()
+    fig.add_trace(go.Bar(
+        x=ag["label"], y=ag["Lido"],
+        name="Lido", marker_color=COR["azul"],
+        text=ag["Lido"].apply(_fmt_m3),
+        textposition="outside", textfont=dict(size=11, color=COR["azul_esc"]),
+        offsetgroup="A",
+    ))
+    fig.add_trace(go.Bar(
+        x=ag["label"], y=ag["Faturado"],
+        name="Faturado", marker_color=COR["verde"],
+        text=ag["Faturado"].apply(_fmt_m3),
+        textposition="outside", textfont=dict(size=11, color="#004D40"),
+        offsetgroup="B",
+    ))
+
     _comp = _comp_periodo()
     if _comp:
         _cd0, _cd1 = _comp["comp_d0"], _comp["comp_d1"]
@@ -2960,20 +2981,36 @@ def pg_leituras(D, d0, d1, _sub=False):
             _lc = _lei_cg.copy()
             _lc["_mes"] = pd.to_datetime(_lc["dt_ref"]).dt.to_period("M").dt.to_timestamp()
             _ag_c = _lc.groupby("_mes").agg(Lido=("qt_volume_lido","sum"),Faturado=("qt_volume_faturado","sum")).reset_index().rename(columns={"_mes":"Mês"})
-            _ag_c_m = _ag_c.melt(id_vars="Mês", var_name="Tipo", value_name="m³")
-            _ag_c_m["Tipo"] = _ag_c_m["Tipo"] + f" ({_comp['label_comp']})"
-            ag_m = pd.concat([ag_m, _ag_c_m], ignore_index=True)
-    fig = px.line(ag_m, x="Mês", y="m³", color="Tipo", markers=True,
-                  title="Volume Lido vs Faturado (m³ mensal)" + (f" — {_comp['label_atual']} vs {_comp['label_comp']}" if _comp else ""),
-                  color_discrete_map={"Lido": COR["azul"], "Faturado": COR["verde"]})
+            _ag_c = _ag_c.sort_values("Mês")
+            _ag_c["label"] = _ag_c["Mês"].apply(lambda d: f"{MESES_PT_ABR[d.month]}/{str(d.year)[2:]}")
+            fig.add_trace(go.Bar(
+                x=_ag_c["label"], y=_ag_c["Lido"],
+                name=f"Lido ({_comp['label_comp']})",
+                marker=dict(color=COR["azul"], opacity=0.4,
+                            pattern=dict(shape="/", fgcolor=COR["azul_esc"])),
+                offsetgroup="A", showlegend=True,
+            ))
+            fig.add_trace(go.Bar(
+                x=_ag_c["label"], y=_ag_c["Faturado"],
+                name=f"Faturado ({_comp['label_comp']})",
+                marker=dict(color=COR["verde"], opacity=0.4,
+                            pattern=dict(shape="/", fgcolor="#004D40")),
+                offsetgroup="B", showlegend=True,
+            ))
+
+    titulo = "Volume Lido vs Faturado (m³ mensal)"
     if _comp:
-        for trace in fig.data:
-            if _comp["label_comp"] in trace.name:
-                trace.line = dict(dash="dot")
-                trace.opacity = 0.6
-    fig.update_layout(margin=dict(t=35, b=0, l=0, r=20), xaxis_title="", yaxis_title="")
-    fig.update_yaxes(tickformat=",.0f")
-    st.plotly_chart(fig, width="stretch")
+        titulo += f" — {_comp['label_atual']} vs {_comp['label_comp']}"
+    fig.update_layout(
+        title=dict(text=titulo, font=dict(size=13, color=COR["azul_esc"])),
+        barmode="group",
+        bargap=0.25, bargroupgap=0.06,
+        margin=dict(t=45, b=0, l=0, r=20),
+        xaxis_title="", yaxis_title="",
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        yaxis=dict(tickformat=",.0f"),
+    )
+    st.plotly_chart(fig, use_container_width=True)
 
     # ════ Leituras por Referência (Mês) - Stacked por Leiturista ════════════════════
     lei_ref = lei.copy()
