@@ -347,7 +347,7 @@ button[kind="headerNoPadding"] span,
 
 
 # ── Carregamento de dados ─────────────────────────────────────────────────────
-@st.cache_data(ttl=60, show_spinner="Carregando dados...")
+@st.cache_data(ttl=3600, show_spinner="Carregando dados...")
 def load():
     def rd(name):
         import pyarrow.parquet as pq
@@ -363,6 +363,14 @@ def load():
             df[c] = pd.to_datetime(df[c], utc=True).dt.tz_localize(None)
         for c in df.select_dtypes(include=["datetime64[ns]"]).columns:
             df[c] = pd.to_datetime(df[c], errors="coerce")
+        # Reduz uso de memória: downcast de numéricos e converte object→category quando útil
+        for c in df.select_dtypes(include=["float64"]).columns:
+            df[c] = pd.to_numeric(df[c], downcast="float")
+        for c in df.select_dtypes(include=["int64"]).columns:
+            df[c] = pd.to_numeric(df[c], downcast="integer")
+        for c in df.select_dtypes(include=["object"]).columns:
+            if df[c].nunique() < 200:
+                df[c] = df[c].astype("category")
         return df
 
     fat      = rd("faturamento")
