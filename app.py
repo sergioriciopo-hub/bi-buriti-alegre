@@ -2015,9 +2015,7 @@ def pg_arrecadacao_diaria(D, d0, d1):
 
     st.info(
         "ℹ️ **Lógica D+**: pagamentos em finais de semana ou feriados nacionais → crédito no próximo dia útil. "
-        "Se o próximo dia útil cair no mês seguinte, o crédito permanece no mês do pagamento. "
-        "⚠️ Diferença residual de ~R$ 23.675 em mar/2026 (dias 20, 23, 24 e 25): "
-        "registros ausentes na fonte BigQuery (`painel_arrecadacao_contabil`)."
+        "Se o próximo dia útil cair no mês seguinte, o crédito permanece no mês do pagamento."
     )
 
     st.markdown("---")
