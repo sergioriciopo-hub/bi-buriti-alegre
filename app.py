@@ -515,6 +515,7 @@ def sidebar_periodo():
         "── Comparativos ──",
         "📊 Mês vs Mesmo Mês Ano Anterior",
         "📊 Trimestre vs Trimestre Anterior",
+        "📊 N Meses vs Ano Anterior",
         "Período Personalizado",
     ]
     sel = st.sidebar.selectbox("Periodo", opcoes, index=10, label_visibility="collapsed")
@@ -658,6 +659,55 @@ def sidebar_periodo():
             <b style="color:#fca5a5;">◉ {_lbl_comp}</b>
             </div>""",
             unsafe_allow_html=True
+        )
+
+    elif sel == "📊 N Meses vs Ano Anterior":
+        import calendar
+        _meses_disp = [(hoje.replace(day=1) - relativedelta(months=i)) for i in range(24)]
+        _labels_m   = [f"{MESES_PT[m.month-1]}/{m.year}" for m in _meses_disp]
+        _sel_fim = st.sidebar.selectbox(
+            "Mês final", _labels_m, index=1, label_visibility="visible"
+        )
+        _mes_fim = _meses_disp[_labels_m.index(_sel_fim)]
+        _n = st.sidebar.slider("Meses a comparar", min_value=2, max_value=24, value=6)
+        _mes_ini = _mes_fim - relativedelta(months=_n - 1)
+        d0 = date(_mes_ini.year, _mes_ini.month, 1)
+        d1 = date(_mes_fim.year, _mes_fim.month,
+                  calendar.monthrange(_mes_fim.year, _mes_fim.month)[1])
+        _comp_d0 = date(d0.year - 1, d0.month, 1)
+        _comp_d1 = date(d1.year - 1, d1.month,
+                        calendar.monthrange(d1.year - 1, d1.month)[1])
+        _pares = []
+        for i in range(_n):
+            _ma = _mes_ini + relativedelta(months=i)
+            _mc = date(_ma.year - 1, _ma.month, 1)
+            _pares.append((f"{MESES_PT[_ma.month-1]}/{_ma.year}",
+                           f"{MESES_PT[_mc.month-1]}/{_mc.year}"))
+        _lbl_atual = f"{MESES_PT[d0.month-1]}/{d0.year} → {MESES_PT[d1.month-1]}/{d1.year}"
+        _lbl_comp  = f"{MESES_PT[_comp_d0.month-1]}/{_comp_d0.year} → {MESES_PT[_comp_d1.month-1]}/{_comp_d1.year}"
+        st.session_state["comp_periodo"] = {
+            "ativo":      True,
+            "tipo":       "multi_mes",
+            "d0":         pd.Timestamp(d0),
+            "d1":         pd.Timestamp(d1),
+            "comp_d0":    pd.Timestamp(_comp_d0),
+            "comp_d1":    pd.Timestamp(_comp_d1),
+            "label_atual": _lbl_atual,
+            "label_comp":  _lbl_comp,
+            "pares":       _pares,
+        }
+        _linhas_badge = "".join(
+            f'<span style="color:#7dd3fc;">{a}</span>'
+            f'<span style="color:rgba(255,255,255,.45);"> vs </span>'
+            f'<span style="color:#fca5a5;">{c}</span><br>'
+            for a, c in _pares
+        )
+        st.sidebar.markdown(
+            f"""<div style="background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);
+            border-radius:10px;padding:8px 12px;margin-top:4px;font-size:.75rem;line-height:1.7;">
+            <span style="color:rgba(255,255,255,.6);font-size:.7rem;">
+            {_n} meses vs Ano Anterior</span><br>{_linhas_badge}</div>""",
+            unsafe_allow_html=True,
         )
 
     else:  # Período Personalizado
@@ -930,6 +980,104 @@ def bar_mensal(df, col_data, col_val, title, cor=None, agrupamento="M"):
                       margin=dict(t=35, b=0, l=0, r=20),
                       uniformtext_minsize=9, uniformtext_mode="hide")
     fig.update_yaxes(tickformat=",.0f")
+    return fig
+
+
+def _bar_comp_mensal(fat_atual, fat_full, col_val, title, comp, cor_atual, unidade=""):
+    """Gráfico de barras agrupadas comparando período atual vs comparativo, mês a mês.
+    Intercala corretamente: para cada mês, barra do ano anterior à esquerda e atual à direita.
+    Funciona para tipo 'mes', 'trimestre' e 'multi_mes'.
+    """
+    _cd0, _cd1 = comp["comp_d0"], comp["comp_d1"]
+    fat_comp = filtrar(fat_full, "dt_ref", _cd0, _cd1)
+
+    def _ag_mes(df):
+        t = df.copy()
+        t["_p"] = pd.to_datetime(t["dt_ref"]).dt.to_period("M")
+        return t.groupby("_p")[col_val].sum()
+
+    vol_a = _ag_mes(fat_atual)
+    vol_c = _ag_mes(fat_comp)
+
+    if comp.get("tipo") == "multi_mes":
+        pares = comp.get("pares", [])
+    else:
+        _meses_a = sorted(vol_a.index.tolist())
+        _meses_c = sorted(vol_c.index.tolist())
+        n = max(len(_meses_a), len(_meses_c))
+        pares = []
+        for i in range(n):
+            lbl_a = _meses_a[i].strftime("%b/%Y") if i < len(_meses_a) else ""
+            lbl_c = _meses_c[i].strftime("%b/%Y") if i < len(_meses_c) else ""
+            pares.append((lbl_a, lbl_c))
+
+    MESES_PT = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"]
+
+    def _lbl_to_period(lbl):
+        try:
+            parts = lbl.split("/")
+            mes = MESES_PT.index(parts[0]) + 1
+            return pd.Period(f"{parts[1]}-{mes:02d}", freq="M")
+        except Exception:
+            return None
+
+    y_comp, y_atual, lbl_comp_xs, lbl_atual_xs = [], [], [], []
+    for lbl_a, lbl_c in pares:
+        pa = _lbl_to_period(lbl_a)
+        pc = _lbl_to_period(lbl_c)
+        y_atual.append(float(vol_a.get(pa, 0)) if pa else 0)
+        y_comp.append(float(vol_c.get(pc, 0)) if pc else 0)
+        lbl_comp_xs.append(lbl_c or lbl_a)
+        lbl_atual_xs.append(lbl_a or lbl_c)
+
+    n = len(pares)
+    GAP = 3
+    x_comp  = [i * GAP + 0.7 for i in range(n)]
+    x_atual = [i * GAP + 1.9 for i in range(n)]
+
+    tickvals = sorted(x_comp + x_atual)
+    ticktext = []
+    for i in range(n):
+        ticktext.append(lbl_comp_xs[i])
+        ticktext.append(lbl_atual_xs[i])
+
+    def _fmt(v):
+        s = f"{v:,.0f}".replace(",", ".")
+        return f"<b>{s} {unidade}</b>" if unidade else f"<b>{s}</b>"
+
+    _txt_fn = dict(size=12, color="white", family="Arial Black")
+    fig = go.Figure()
+    fig.add_bar(
+        x=x_comp, y=y_comp,
+        name=comp["label_comp"],
+        marker_color="rgba(220,38,38,0.60)",
+        width=1.0,
+        text=[_fmt(v) for v in y_comp],
+        textposition="inside", textangle=-90,
+        textfont=_txt_fn, insidetextanchor="middle",
+    )
+    fig.add_bar(
+        x=x_atual, y=y_atual,
+        name=comp["label_atual"],
+        marker_color=cor_atual,
+        width=1.0,
+        text=[_fmt(v) for v in y_atual],
+        textposition="inside", textangle=-90,
+        textfont=_txt_fn, insidetextanchor="middle",
+    )
+    fig.update_layout(
+        title=title,
+        xaxis=dict(
+            tickvals=tickvals,
+            ticktext=ticktext,
+            tickfont=dict(size=11, family="Arial"),
+        ),
+        xaxis_title="", yaxis_title="",
+        margin=dict(t=45, b=40, l=0, r=20),
+        legend=dict(orientation="h", y=1.10, x=0.5, xanchor="center",
+                    font=dict(size=12, family="Arial")),
+        uniformtext_minsize=9, uniformtext_mode="hide",
+    )
     return fig
 
 
@@ -1688,25 +1836,10 @@ def _faturamento_body(D, d0, d1):
     # Volume m³ mensal — inclui período comparativo quando ativo
     _comp = _comp_periodo()
     if _comp:
-        _cd0, _cd1 = _comp["comp_d0"], _comp["comp_d1"]
-        _fat_c = filtrar(D["fat"], "dt_ref", _cd0, _cd1)
-        _fat_atual = fat.copy(); _fat_atual["_Período"] = _comp["label_atual"]
-        _fat_comp  = _fat_c.copy(); _fat_comp["_Período"] = _comp["label_comp"]
-        _fat_both  = pd.concat([_fat_atual, _fat_comp], ignore_index=True)
-        _fat_both["_mes"] = pd.to_datetime(_fat_both["dt_ref"]).dt.to_period("M").dt.to_timestamp()
-        _ag3 = _fat_both.groupby(["_mes","_Período"])["volume_m3"].sum().reset_index()
-        _ag3.columns = ["Mês","Período","Volume"]
-        _ag3["_label"] = _ag3["Mês"].dt.strftime("%b/%Y")
-        fig3 = px.bar(_ag3, x="_label", y="Volume", color="Período", barmode="group",
-                      title="Volume Faturado m³ (mensal)",
-                      color_discrete_map={_comp["label_atual"]: COR["azul_c"],
-                                          _comp["label_comp"]:  "rgba(220,38,38,0.55)"},
-                      text=_ag3["Volume"].apply(lambda v: f"<b>{v:,.0f} m³</b>".replace(",",".")))
-        fig3.update_traces(textposition="inside", textangle=-90,
-                           textfont=dict(size=13, color="white", family="Arial Black"),
-                           insidetextanchor="middle")
-        fig3.update_layout(xaxis_title="", yaxis_title="", margin=dict(t=35,b=0,l=0,r=20),
-                           legend=dict(orientation="h", y=1.08, x=0.5, xanchor="center"))
+        fig3 = _bar_comp_mensal(
+            fat, D["fat"], "volume_m3", "Volume Faturado m³ (mensal)",
+            _comp, COR["azul_c"], "m³"
+        )
         fig3.update_yaxes(tickformat=",.0f")
     else:
         fig3 = bar_mensal(fat, "dt_ref", "volume_m3",
