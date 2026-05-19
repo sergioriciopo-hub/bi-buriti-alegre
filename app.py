@@ -4571,14 +4571,6 @@ def main():
             use_container_width=True,
         )
 
-    # ── Link para BI Ipameri ───────────────────────────────────────────────────
-    st.sidebar.markdown("---")
-    st.sidebar.link_button(
-        "🔀 BI Águas de Ipameri",
-        "https://bi-ipameri.streamlit.app",
-        use_container_width=True,
-    )
-
     paginas[pg_sel](D, d0, d1)
 
 
