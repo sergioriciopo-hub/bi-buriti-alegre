@@ -669,7 +669,7 @@ def sidebar_periodo():
             "Mês final", _labels_m, index=1, label_visibility="visible"
         )
         _mes_fim = _meses_disp[_labels_m.index(_sel_fim)]
-        _n = st.sidebar.slider("Meses a comparar", min_value=2, max_value=24, value=6)
+        _n = st.sidebar.slider("Meses a comparar", min_value=1, max_value=24, value=6)
         _mes_ini = _mes_fim - relativedelta(months=_n - 1)
         d0 = date(_mes_ini.year, _mes_ini.month, 1)
         d1 = date(_mes_fim.year, _mes_fim.month,
