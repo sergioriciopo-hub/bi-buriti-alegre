@@ -1875,7 +1875,9 @@ def _faturamento_body(D, d0, d1):
     # Multas/Juros NÃO entram no líquido (conforme FAT0015)
     vl_liquido     = fat["vl_total_faturado"].sum()
     vl_agua        = fat["vl_agua"].sum()
+    vl_esgoto      = fat["vl_esgoto"].sum() if "vl_esgoto" in fat.columns else 0
     vl_tar_bas     = fat["vl_servico_basico_agua"].sum() if "vl_servico_basico_agua" in fat.columns else 0
+    vl_tar_bas_esg = fat["vl_servico_basico_esgoto"].sum() if "vl_servico_basico_esgoto" in fat.columns else 0
     vl_servico     = fat["vl_servico"].sum()
     vl_lixo        = fat["vl_lixo"].sum()
     vl_multas      = fat["vl_multas_juros"].sum()   if "vl_multas_juros"  in fat.columns else 0
@@ -1896,11 +1898,15 @@ def _faturamento_body(D, d0, d1):
     st.markdown("---")
 
     # ── KPIs linha 2 — componentes (incluso no líquido) ──────────────────────
-    c1, c2, c3, c4 = st.columns(4)
+    c1, c2, c3 = st.columns(3)
     kpi(c1, "Água",          vl_agua)
-    kpi(c2, "Tarifa Básica", vl_tar_bas)
-    kpi(c3, "Serviços",      vl_servico)
-    kpi(c4, "Lixo",          vl_lixo)
+    kpi(c2, "Esgoto",        vl_esgoto)
+    kpi(c3, "Tarifa Básica Água", vl_tar_bas)
+
+    c4, c5, c6 = st.columns(3)
+    kpi(c4, "Tarifa Básica Esgoto", vl_tar_bas_esg)
+    kpi(c5, "Serviços",      vl_servico)
+    kpi(c6, "Lixo",          vl_lixo)
 
     # ── KPIs linha 3 — exclusões do faturamento líquido ──────────────────────
     st.caption("ℹ️ Os valores abaixo não compõem o Faturamento Líquido (conforme relatório FAT0015):")
@@ -1928,10 +1934,12 @@ def _faturamento_body(D, d0, d1):
         _vl_ag_c  = _fat_c["vl_agua"].sum()           if not _fat_c.empty else 0
         _vol_c    = _fat_c["volume_m3"].sum()          if not _fat_c.empty and "volume_m3" in _fat_c.columns else 0
         _qt_c     = _fat_c["qt_fatura"].sum()          if not _fat_c.empty and "qt_fatura" in _fat_c.columns else 0
+        _vl_esg_c = _fat_c["vl_esgoto"].sum() if not _fat_c.empty and "vl_esgoto" in _fat_c.columns else 0
         _brl = lambda v: f"R$ {v:,.0f}".replace(",","X").replace(".",",").replace("X",".")
         render_comp_bloco(_comp["label_atual"], _comp["label_comp"], [
             ("Total Líquido Faturado", vl_liquido, _vl_liq_c, _brl,                       True),
             ("Água",                  vl_agua,    _vl_ag_c,  _brl,                       True),
+            ("Esgoto",                vl_esgoto,  _vl_esg_c, _brl,                       True),
             ("Volume (m³)",           vol_m3,     _vol_c,    lambda v: f"{v:,.0f} m³",   True),
             ("Qtd Faturas",           qt_faturas, _qt_c,     lambda v: f"{int(v):,}",    True),
         ])
@@ -1943,13 +1951,16 @@ def _faturamento_body(D, d0, d1):
     fat_m = fat.copy()
     fat_m["_mes"] = pd.to_datetime(fat_m["dt_ref"]).dt.to_period("M").dt.to_timestamp()
     # Componentes do Faturamento Líquido (excluindo Multas/Juros)
-    agg_cols = {"Água": "vl_agua", "Tarifa Básica": "vl_servico_basico_agua",
+    agg_cols = {"Água": "vl_agua", "Esgoto": "vl_esgoto",
+                "Tar. Básica Água": "vl_servico_basico_agua",
+                "Tar. Básica Esg.": "vl_servico_basico_esgoto",
                 "Serviços": "vl_servico", "Lixo": "vl_lixo"}
     agg_dict = {k: (v, "sum") for k, v in agg_cols.items() if v in fat_m.columns}
     ag = fat_m.groupby("_mes").agg(**agg_dict).reset_index().rename(columns={"_mes": "Mês"})
     ag_melt = ag.melt(id_vars="Mês", var_name="Componente", value_name="Valor")
     ag_melt = ag_melt[ag_melt["Valor"] > 0]
-    _COMP_CORES = {"Água": COR["agua"], "Tarifa Básica": "#8B5CF6",
+    _COMP_CORES = {"Água": COR["agua"], "Esgoto": COR["esgoto"],
+                   "Tar. Básica Água": "#8B5CF6", "Tar. Básica Esg.": "#6D28D9",
                    "Serviços": COR["servico"], "Lixo": COR["lixo"]}
     if _comp:
         # Intercalated stacked bars per month pair
@@ -2031,13 +2042,15 @@ def _faturamento_body(D, d0, d1):
     st.plotly_chart(fig, width="stretch")
 
     # Pizza composição — somente componentes do líquido
-    comp_data = {"Água": vl_agua, "Tarifa Básica": vl_tar_bas,
+    comp_data = {"Água": vl_agua, "Esgoto": vl_esgoto,
+                 "Tar. Básica Água": vl_tar_bas, "Tar. Básica Esg.": vl_tar_bas_esg,
                  "Serviços": vl_servico, "Lixo": vl_lixo}
     comp_data = {k: v for k, v in comp_data.items() if v > 0}
     if comp_data:
         df_comp = pd.DataFrame(list(comp_data.items()), columns=["Componente", "Valor"])
         _cores_pie = {
-            "Água": COR["agua"], "Tarifa Básica": "#8B5CF6",
+            "Água": COR["agua"], "Esgoto": COR["esgoto"],
+            "Tar. Básica Água": "#8B5CF6", "Tar. Básica Esg.": "#6D28D9",
             "Serviços": COR["servico"], "Lixo": COR["lixo"],
         }
         fig2 = go.Figure(data=[go.Pie(
